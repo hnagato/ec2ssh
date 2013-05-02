@@ -41,10 +41,16 @@ module Ec2ssh
           end
           next nil if dns_name.nil?
           
-          pem = @dotfile['pems'][region] ? @dotfile['pems'][region] : @dotfile['pems']['default']
+          pem = nil
+          if(@dotfile['pems'])
+            pem = @dotfile['pems'][region] ? @dotfile['pems'][region] : @dotfile['pems']['default']
+          end
           extparam = pem ? "IdentityFile " + pem : ""
           
-          proxy_command = @dotfile['vpc']['proxy_commands'][vpc_id] if is_private && vpc_id
+          proxy_command = nil
+          if(@dotfile['vpc'] && @dotfile['vpc']['proxy_commands'])
+            proxy_command = @dotfile['vpc']['proxy_commands'][vpc_id] if is_private && vpc_id
+          end
           extparam += proxy_command ? "\n  ProxyCommand " + proxy_command : ""
           
           {:host => "#{name}", :dns_name => dns_name, :extparam => extparam}
