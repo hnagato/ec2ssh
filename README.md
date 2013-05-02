@@ -27,12 +27,19 @@ $ ec2ssh init
 $ vi ~/.ec2ssh
 ---
 path: /path/to/ssh_config
+pems:
+  default: /path/to/aws.pem
+  us-west-1: /path/to/aws_ca.pem
+vpc:
+  proxy_commands:
+    vpc-xxxxx: ssh proxy nc %h %p
 aws_keys:
   default:
     access_key_id: YOUR_ACCESS_KEY_ID
     secret_access_key: YOUR_SECRET_ACCESS_KEY
 regions:
   - ap-northeast-1
+  - us-west-1
 ```
 
 ### 5. Execute `ec2ssh update`

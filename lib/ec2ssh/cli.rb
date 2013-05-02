@@ -86,7 +86,7 @@ module Ec2ssh
         section_str = hosts.map { |h| <<-END }.join
 Host #{h[:host]}
   HostName #{h[:dns_name]}
-  #{h[:id]}
+  #{h[:extparam]}
         END
         config.sections[options.aws_key] ||= SshConfig::Section.new(
           options.aws_key,
