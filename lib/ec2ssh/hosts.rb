@@ -29,7 +29,9 @@ module Ec2ssh
           name_tag = instance[:tag_set].find {|tag| tag[:key] == 'Name' }
           next nil if name_tag.nil? || name_tag[:value].nil?
           name = name_tag[:value]
-          dns_name = instance[:dns_name] or next nil
+          dns_name = instance[:dns_name]
+          dns_name = instance[:ip_address] if dns_name.nil?
+          next nil if dns_name.nil?
           id = ""
           if(@dotfile['pem'])
               id = "IdentityFile " + @dotfile['pem']
