@@ -42,16 +42,22 @@ module Ec2ssh
           next nil if dns_name.nil?
           
           pem = nil
+          extparam = ""
           if(@dotfile['pems'])
             pem = @dotfile['pems'][region] ? @dotfile['pems'][region] : @dotfile['pems']['default']
           end
-          extparam = pem ? "IdentityFile " + pem : ""
+          extparam += pem ? "  IdentityFile " + pem + "\n" : ""
+          user = nil
+          if(@dotfile['users'])
+            user = @dotfile['users'][region] ? @dotfile['users'][region] : @dotfile['users']['default']
+          end
+          extparam += user ? "  User " + user + "\n" : ""
           
           proxy_command = nil
           if(@dotfile['vpc'] && @dotfile['vpc']['proxy_commands'])
             proxy_command = @dotfile['vpc']['proxy_commands'][vpc_id] if is_private && vpc_id
           end
-          extparam += proxy_command ? "\n  ProxyCommand " + proxy_command : ""
+          extparam += proxy_command ? "  ProxyCommand " + proxy_command + "\n" : ""
           
           {:host => "#{name}", :dns_name => dns_name, :extparam => extparam}
         }.compact.sort {|a,b| a[:host] <=> b[:host] }
